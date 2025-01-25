@@ -1,0 +1,648 @@
+this error occurred upon runnong development server. kindly assist to solve the issue at hand.  I have provide file where have issue some are simliar but are .js and .tsx format. review all errors provided in the attachment then  comprehensively nalyse with affected code files in the above attachment   and provide solution in structured and systemamtic way please ensure all the error are resolve . any code file must be geenrated in full and path where the code in to be upadted provided with in the code.
+
+
+
+
+
+
+
+C:\Users\RICHARD\OneDrive - RedCube Computing Services\Desktop\mti-portal>npm start
+
+> mti-portal@0.1.0 start
+> craco start
+
+Cannot find ESLint plugin (ESLintWebpackPlugin).
+(node:26060) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:26060) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+Compiled successfully!
+
+You can now view mti-portal in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://192.168.1.109:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+
+webpack compiled successfully
+Files successfully emitted, waiting for typecheck results...
+Issues checking in progress...
+WARNING in src/components/documents/DocumentManagement.tsx:2:40
+TS6133: 'useEffect' is declared but its value is never read.
+    1 | //src/components/documents/DocumentManagement.tsx
+  > 2 | import React, { useState, useCallback, useEffect } from 'react';
+      |                                        ^^^^^^^^^
+    3 | import { AlertCircle, Upload, FileText, CheckCircle, XCircle } from 'lucide-react';
+    4 | import { Card, CardContent } from '@/components/ui/card';
+    5 | import { Document, DocumentStatus, WorkflowState } from '../../types/core';
+
+WARNING in src/components/documents/DocumentManagement.tsx:16:11
+TS6196: 'DocumentError' is declared but never used.
+    14 | }
+    15 |
+  > 16 | interface DocumentError {
+       |           ^^^^^^^^^^^^^
+    17 |   code: string;
+    18 |   message: string;
+    19 |   details?: any;
+
+WARNING in src/components/documents/DocumentManagement.tsx:22:11
+TS6196: 'DocumentStatusTracking' is declared but never used.
+    20 | }
+    21 |
+  > 22 | interface DocumentStatusTracking {
+       |           ^^^^^^^^^^^^^^^^^^^^^^
+    23 |   lastUpdated: string;
+    24 |   currentStatus: DocumentStatus;
+    25 |   statusHistory: Array<{
+
+WARNING in src/components/documents/DocumentManagement.tsx:68:3
+TS6133: 'maxUploads' is declared but its value is never read.
+    66 |   onError,
+    67 |   validation = defaultValidation,
+  > 68 |   maxUploads = 10,
+       |   ^^^^^^^^^^
+    69 |   allowMultiple = true,
+    70 |   showProgress = true,
+    71 |   autoUpload = true
+
+WARNING in src/components/documents/DocumentManagement.tsx:71:3
+TS6133: 'autoUpload' is declared but its value is never read.
+    69 |   allowMultiple = true,
+    70 |   showProgress = true,
+  > 71 |   autoUpload = true
+       |   ^^^^^^^^^^
+    72 | }) => {
+    73 |   const { role, user } = useAuth();
+    74 |   const [documents, setDocuments] = useState<Document[]>(initialDocuments);
+
+WARNING in src/components/documents/DocumentManagement.tsx:76:10
+TS6133: 'pendingFiles' is declared but its value is never read.
+    74 |   const [documents, setDocuments] = useState<Document[]>(initialDocuments);
+    75 |   const [uploadState, setUploadState] = useState<Record<string, DocumentUploadState>>({});
+  > 76 |   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+       |          ^^^^^^^^^^^^
+    77 |
+    78 |   // File validation
+    79 |   const validateFile = useCallback((file: File): string[] => {
+
+WARNING in src/components/documents/DocumentManagement.tsx:76:24
+TS6133: 'setPendingFiles' is declared but its value is never read.
+    74 |   const [documents, setDocuments] = useState<Document[]>(initialDocuments);
+    75 |   const [uploadState, setUploadState] = useState<Record<string, DocumentUploadState>>({});
+  > 76 |   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+       |                        ^^^^^^^^^^^^^^^
+    77 |
+    78 |   // File validation
+    79 |   const validateFile = useCallback((file: File): string[] => {
+
+WARNING in src/components/documents/DocumentManagement.tsx:141:26
+TS2345: Argument of type '(prev: Record<string, DocumentUploadState>) => { [x: string]: DocumentUploadState | { progress: number; status: "completed" | "uploading"; error?: string | null; validationErrors?: string[]; }; }' is not assignable to parameter of type 'SetStateAction<Record<string, DocumentUploadState>>'.
+  Type '(prev: Record<string, DocumentUploadState>) => { [x: string]: DocumentUploadState | { progress: number; status: "completed" | "uploading"; error?: string | null; validationErrors?: string[]; }; }' is not assignable to type '(prevState: Record<string, DocumentUploadState>) => Record<string, DocumentUploadState>'.
+    Type '{ [x: string]: DocumentUploadState | { progress: number; status: "completed" | "uploading"; error?: string | null; validationErrors?: string[]; }; }' is not assignable to type 'Record<string, DocumentUploadState>'.
+      'string' index signatures are incompatible.
+        Type 'DocumentUploadState | { progress: number; status: "completed" | "uploading"; error?: string | null; validationErrors?: string[]; }' is not assignable to type 'DocumentUploadState'.
+          Type '{ progress: number; status: "completed" | "uploading"; error?: string | null; validationErrors?: string[]; }' is not assignable to type 'DocumentUploadState'.
+            Property 'error' is optional in type '{ progress: number; status: "completed" | "uploading"; error?: string | null; validationErrors?: string[]; }' but required in type 'DocumentUploadState'.
+    139 |         for (let progress = 0; progress <= 100; progress += 10) {
+    140 |           await new Promise(resolve => setTimeout(resolve, 200));
+  > 141 |           setUploadState(prev => ({
+        |                          ^^^^^^^^^^
+  > 142 |             ...prev,
+        | ^^^^^^^^^^^^^^^^^^^^
+  > 143 |             [docId]: {
+        | ^^^^^^^^^^^^^^^^^^^^
+  > 144 |               ...prev[docId],
+        | ^^^^^^^^^^^^^^^^^^^^
+  > 145 |               progress,
+        | ^^^^^^^^^^^^^^^^^^^^
+  > 146 |               status: progress === 100 ? 'completed' : 'uploading'
+        | ^^^^^^^^^^^^^^^^^^^^
+  > 147 |             }
+        | ^^^^^^^^^^^^^^^^^^^^
+  > 148 |           }));
+        | ^^^^^^^^^^^^^
+    149 |         }
+    150 |
+    151 |         const newDocument: Document = {
+
+WARNING in src/components/documents/DocumentManagement.tsx:151:15
+TS2741: Property 'metadata' is missing in type '{ id: string; name: string; type: string; size: number; file: File; uploadDate: string; status: "pending"; workflowState: "draft"; history: { state: "draft"; timestamp: string; user: string; }[]; }' but required in type 'Document'.
+    149 |         }
+    150 |
+  > 151 |         const newDocument: Document = {
+        |               ^^^^^^^^^^^
+    152 |           id: docId,
+    153 |           name: file.name,
+    154 |           type: file.type,
+
+WARNING in src/components/documents/DocumentManagement.tsx:173:24
+TS2345: Argument of type '(prev: Record<string, DocumentUploadState>) => { [x: string]: DocumentUploadState | { error: string; status: "error"; progress?: number; validationErrors?: string[]; }; }' is not assignable to parameter of type 'SetStateAction<Record<string, DocumentUploadState>>'.
+  Type '(prev: Record<string, DocumentUploadState>) => { [x: string]: DocumentUploadState | { error: string; status: "error"; progress?: number; validationErrors?: string[]; }; }' is not assignable to type '(prevState: Record<string, DocumentUploadState>) => Record<string, DocumentUploadState>'.
+    Type '{ [x: string]: DocumentUploadState | { error: string; status: "error"; progress?: number; validationErrors?: string[]; }; }' is not assignable to type 'Record<string, DocumentUploadState>'.
+      'string' index signatures are incompatible.
+        Type 'DocumentUploadState | { error: string; status: "error"; progress?: number; validationErrors?: string[]; }' is not assignable to type 'DocumentUploadState'.
+          Type '{ error: string; status: "error"; progress?: number; validationErrors?: string[]; }' is not assignable to type 'DocumentUploadState'.
+            Property 'progress' is optional in type '{ error: string; status: "error"; progress?: number; validationErrors?: string[]; }' but required in type 'DocumentUploadState'.
+    171 |       } catch (error) {
+    172 |         const errorMessage = error instanceof Error ? error.message : 'Upload failed';
+  > 173 |         setUploadState(prev => ({
+        |                        ^^^^^^^^^^
+  > 174 |           ...prev,
+        | ^^^^^^^^^^^^^^^^^^
+  > 175 |           [docId]: {
+        | ^^^^^^^^^^^^^^^^^^
+  > 176 |             ...prev[docId],
+        | ^^^^^^^^^^^^^^^^^^
+  > 177 |             error: errorMessage,
+        | ^^^^^^^^^^^^^^^^^^
+  > 178 |             status: 'error'
+        | ^^^^^^^^^^^^^^^^^^
+  > 179 |           }
+        | ^^^^^^^^^^^^^^^^^^
+  > 180 |         }));
+        | ^^^^^^^^^^^
+    181 |         onError?.(error instanceof Error ? error : new Error(errorMessage));
+    182 |         throw error;
+    183 |       }
+
+WARNING in src/components/documents/DocumentManagement.tsx:260:8
+TS2559: Type '{ children: Element; }' has no properties in common with type 'IntrinsicAttributes & RefAttributes<any>'.
+    258 |       }
+    259 |     >
+  > 260 |       <Card>
+        |        ^^^^
+    261 |         <CardContent className="space-y-6 p-6">
+    262 |           {/* Upload Area */}
+    263 |           <div
+
+WARNING in src/components/documents/DocumentManagement.tsx:261:10
+TS2322: Type '{ children: (false | Element | (false | Element)[])[]; className: string; }' is not assignable to type 'IntrinsicAttributes & RefAttributes<any>'.
+  Property 'children' does not exist on type 'IntrinsicAttributes & RefAttributes<any>'.
+    259 |     >
+    260 |       <Card>
+  > 261 |         <CardContent className="space-y-6 p-6">
+        |          ^^^^^^^^^^^
+    262 |           {/* Upload Area */}
+    263 |           <div
+    264 |             onDrop={handleDrop}
+
+WARNING in src/components/documents/DocumentWorkflow.tsx:66:37
+TS2322: Type '"revoked"' is not assignable to type 'WorkflowState'.
+    64 |     bgColor: 'bg-green-100',
+    65 |     label: 'Approved',
+  > 66 |     allowedTransitions: ['expired', 'revoked']
+       |                                     ^^^^^^^^^
+    67 |   },
+    68 |   rejected: {
+    69 |     icon: AlertCircle,
+
+WARNING in src/components/documents/DocumentWorkflow.tsx:127:3
+TS6133: 'document' is declared but its value is never read.
+    125 |
+    126 | const DocumentWorkflow: React.FC<DocumentWorkflowProps> = ({
+  > 127 |   document,
+        |   ^^^^^^^^
+    128 |   currentState,
+    129 |   history = [],
+    130 |   onStateChange,
+
+WARNING in src/components/documents/DocumentWorkflow.tsx:140:9
+TS2532: Object is possibly 'undefined'.
+    138 |
+    139 |   const handleStateChange = (newState: WorkflowState, comment: string = '') => {
+  > 140 |     if (workflowSteps[currentState].allowedTransitions.includes(newState)) {
+        |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    141 |       onStateChange(newState, comment);
+    142 |     }
+    143 |   };
+
+WARNING in src/components/documents/DocumentWorkflow.tsx:158:6
+TS2559: Type '{ children: Element; }' has no properties in common with type 'IntrinsicAttributes & RefAttributes<any>'.
+    156 |
+    157 |   return (
+  > 158 |     <Card>
+        |      ^^^^
+    159 |       <CardContent className="p-4">
+    160 |         {/* Current State */}
+    161 |         <div className={`flex items-center justify-between p-3 rounded-lg ${currentStep?.bgColor}`}>
+
+WARNING in src/components/documents/DocumentWorkflow.tsx:159:8
+TS2322: Type '{ children: (false | Element)[]; className: string; }' is not assignable to type 'IntrinsicAttributes & RefAttributes<any>'.
+  Property 'children' does not exist on type 'IntrinsicAttributes & RefAttributes<any>'.
+    157 |   return (
+    158 |     <Card>
+  > 159 |       <CardContent className="p-4">
+        |        ^^^^^^^^^^^
+    160 |         {/* Current State */}
+    161 |         <div className={`flex items-center justify-between p-3 rounded-lg ${currentStep?.bgColor}`}>
+    162 |           <div className="flex items-center">
+
+WARNING in src/components/documents/DocumentWorkflow.tsx:223:28
+TS2532: Object is possibly 'undefined'.
+    221 |
+    222 |         {/* Actions */}
+  > 223 |         {canChangeState && workflowSteps[currentState].allowedTransitions.length > 0 && (
+        |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    224 |           <div className="mt-4 pt-4 border-t">
+    225 |             <h4 className="text-sm font-medium text-gray-900 mb-2">Actions</h4>
+    226 |             <div className="flex flex-wrap gap-2">
+
+WARNING in src/components/documents/DocumentWorkflow.tsx:227:16
+TS2532: Object is possibly 'undefined'.
+    225 |             <h4 className="text-sm font-medium text-gray-900 mb-2">Actions</h4>
+    226 |             <div className="flex flex-wrap gap-2">
+  > 227 |               {workflowSteps[currentState].allowedTransitions.map(transition => {
+        |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    228 |                 const transitionStep = workflowSteps[transition];
+    229 |                 return (
+    230 |                   <button
+
+WARNING in src/components/documents/DocumentWorkflow.tsx:239:22
+TS18048: 'transitionStep' is possibly 'undefined'.
+    237 |                     type="button"
+    238 |                   >
+  > 239 |                     {transitionStep.label}
+        |                      ^^^^^^^^^^^^^^
+    240 |                   </button>
+    241 |                 );
+    242 |               })}
+
+WARNING in src/components/documents/EnhancedDocumentPreview.tsx:16:3
+TS6133: 'DocumentPreviewProps' is declared but its value is never read.
+    14 | import {
+    15 |   Document,
+  > 16 |   DocumentPreviewProps,
+       |   ^^^^^^^^^^^^^^^^^^^^
+    17 |   ValidationResult
+    18 | } from '../../types/document';
+    19 |
+
+WARNING in src/components/documents/EnhancedDocumentPreview.tsx:132:38
+TS2339: Property 'createElement' does not exist on type 'Document'.
+    130 |               onClick={() => {
+    131 |                 if (previewUrl) {
+  > 132 |                   const a = document.createElement('a');
+        |                                      ^^^^^^^^^^^^^
+    133 |                   a.href = previewUrl;
+    134 |                   a.download = document.name;
+    135 |                   a.click();
+
+WARNING in src/components/documents/EnhancedDocumentPreview.tsx:172:8
+TS2559: Type '{ children: Element; }' has no properties in common with type 'IntrinsicAttributes & RefAttributes<any>'.
+    170 |   return (
+    171 |     <>
+  > 172 |       <Card>
+        |        ^^^^
+    173 |         <CardContent className="p-4">
+    174 |           <div className="flex items-start justify-between">
+    175 |             <div className="flex items-start space-x-4">
+
+WARNING in src/components/documents/EnhancedDocumentPreview.tsx:173:10
+TS2322: Type '{ children: (false | Element | undefined)[]; className: string; }' is not assignable to type 'IntrinsicAttributes & RefAttributes<any>'.
+  Property 'children' does not exist on type 'IntrinsicAttributes & RefAttributes<any>'.
+    171 |     <>
+    172 |       <Card>
+  > 173 |         <CardContent className="p-4">
+        |          ^^^^^^^^^^^
+    174 |           <div className="flex items-start justify-between">
+    175 |             <div className="flex items-start space-x-4">
+    176 |               <Icon className="w-8 h-8 text-blue-600 mt-1" />
+
+WARNING in src/components/documents/EnhancedDocumentVerification.tsx:5:11
+TS6196: 'VerificationStatus' is declared but never used.
+    3 | import { Check, X, Clock, AlertCircle } from 'lucide-react';
+    4 |
+  > 5 | interface VerificationStatus {
+      |           ^^^^^^^^^^^^^^^^^^
+    6 |   icon: typeof Check;
+    7 |   color: string;
+    8 |   label: string;
+
+WARNING in src/components/error/EnhancedErrorHandling.tsx:2:27
+TS6133: 'useEffect' is declared but its value is never read.
+    1 | //src/components/error/EnhancedErrorHandling.tsx
+  > 2 | import React, { useState, useEffect, useCallback } from 'react';
+      |                           ^^^^^^^^^
+    3 | import { AlertCircle, XCircle, AlertTriangle, CheckCircle, RefreshCw } from 'lucide-react';
+    4 | import { CSSTransition, TransitionGroup } from 'react-transition-group';
+    5 | import './error-styles.css';
+
+WARNING in src/components/error/EnhancedErrorHandling.tsx:79:9
+TS6133: 'addError' is declared but its value is never read.
+    77 |   const [groupedErrors, setGroupedErrors] = useState<Record<string, ErrorState[]>>({});
+    78 |
+  > 79 |   const addError = useCallback((error: Omit<ErrorState, 'id' | 'timestamp'>) => {
+       |         ^^^^^^^^
+    80 |     const newError: ErrorState = {
+    81 |       ...error,
+    82 |       id: Math.random().toString(36).substr(2, 9),
+
+WARNING in src/components/error/EnhancedErrorHandling.tsx:89:9
+TS2464: A computed property name must be of type 'string', 'number', 'symbol', or 'any'.
+    87 |       setGroupedErrors(prev => ({
+    88 |         ...prev,
+  > 89 |         [error.groupId]: [
+       |         ^^^^^^^^^^^^^^^
+    90 |           ...(prev[error.groupId] || []),
+    91 |           newError
+    92 |         ].slice(-maxErrors)
+
+WARNING in src/components/error/EnhancedErrorHandling.tsx:90:20
+TS2538: Type 'undefined' cannot be used as an index type.
+    88 |         ...prev,
+    89 |         [error.groupId]: [
+  > 90 |           ...(prev[error.groupId] || []),
+       |                    ^^^^^^^^^^^^^
+    91 |           newError
+    92 |         ].slice(-maxErrors)
+    93 |       }));
+
+WARNING in src/components/error/EnhancedErrorHandling.tsx:114:39
+TS2532: Object is possibly 'undefined'.
+    112 |         const newGroupedErrors = { ...prev };
+    113 |         Object.keys(newGroupedErrors).forEach(groupId => {
+  > 114 |           newGroupedErrors[groupId] = newGroupedErrors[groupId].filter(
+        |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+    115 |             error => error.id !== errorId
+    116 |           );
+    117 |         });
+
+WARNING in src/components/error/EnhancedErrorHandling.tsx:125:9
+TS6133: 'clearAllErrors' is declared but its value is never read.
+    123 |   }, [grouped]);
+    124 |
+  > 125 |   const clearAllErrors = useCallback(() => {
+        |         ^^^^^^^^^^^^^^
+    126 |     setErrors([]);
+    127 |     setGroupedErrors({});
+    128 |     onClearError?.();
+
+WARNING in src/components/error/ErrorBoundary.tsx:2:8
+TS6133: 'React' is declared but its value is never read.
+    1 | //src/components/error/ErrorBoundary.tsx
+  > 2 | import React, { Component, ErrorInfo, ReactNode } from 'react';
+      |        ^^^^^
+    3 |
+    4 | interface Props {
+    5 |   children: ReactNode;
+
+WARNING in src/components/error/ErrorBoundary.tsx:16:10
+TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Component<Props, State, any>'.
+    14 |
+    15 | export class ErrorBoundary extends Component<Props, State> {
+  > 16 |   public state: State = {
+       |          ^^^^^
+    17 |     hasError: false,
+    18 |     error: null
+    19 |   };
+
+WARNING in src/components/error/ErrorBoundary.tsx:28:10
+TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Component<Props, State, any>'.
+    26 |   }
+    27 |
+  > 28 |   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+       |          ^^^^^^^^^^^^^^^^^
+    29 |     console.error('Error caught by boundary:', error, errorInfo);
+    30 |     this.props.onError?.(error, errorInfo);
+    31 |   }
+
+WARNING in src/components/error/ErrorBoundary.tsx:40:10
+TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Component<Props, State, any>'.
+    38 |   };
+    39 |
+  > 40 |   public render() {
+       |          ^^^^^^
+    41 |     if (this.state.hasError) {
+    42 |       if (this.props.fallback) {
+    43 |         return this.props.fallback;
+
+WARNING in src/components/error/ErrorHandling.tsx:53:13
+TS7030: Not all code paths return a value.
+    51 |   }, [errors]);
+    52 |
+  > 53 |   useEffect(() => {
+       |             ^^^^^^^
+    54 |     if (isVisible && autoHideDuration > 0) {
+    55 |       const timer = setTimeout(() => {
+    56 |         setIsVisible(false);
+
+WARNING in src/components/error/ErrorHandling.tsx:164:3
+TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Component<{ children: ReactNode; onError: (error: Error) => void; }, { hasError: boolean; }, any>'.
+    162 |   }
+    163 |
+  > 164 |   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+        |   ^^^^^^^^^^^^^^^^^
+    165 |     this.props.onError(error);
+    166 |     console.error('Error caught by boundary:', error, errorInfo);
+    167 |   }
+
+WARNING in src/components/error/ErrorHandling.tsx:169:3
+TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'Component<{ children: ReactNode; onError: (error: Error) => void; }, { hasError: boolean; }, any>'.
+    167 |   }
+    168 |
+  > 169 |   render() {
+        |   ^^^^^^
+    170 |     if (this.state.hasError) {
+    171 |       return null;
+    172 |     }
+
+WARNING in src/components/institution/registration/DocumentManagement.tsx:2:8
+TS6133: 'React' is declared but its value is never read.
+    1 | //src/components/institution/registration/DocumentManagement.tsx
+  > 2 | import React, { useState } from 'react';
+      |        ^^^^^
+    3 | import { Card, CardContent } from '@/components/ui/card';
+    4 | import { Button } from '@/components/ui/button';
+    5 | import { FileText, Upload, RefreshCw, X, Check } from 'lucide-react';
+
+WARNING in src/components/institution/registration/DocumentManagement.tsx:3:1
+TS6192: All imports in import declaration are unused.
+    1 | //src/components/institution/registration/DocumentManagement.tsx
+    2 | import React, { useState } from 'react';
+  > 3 | import { Card, CardContent } from '@/components/ui/card';
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    4 | import { Button } from '@/components/ui/button';
+    5 | import { FileText, Upload, RefreshCw, X, Check } from 'lucide-react';
+    6 | import { Alert, AlertDescription } from '@/components/ui/alert';
+
+WARNING in src/components/institution/registration/DocumentManagement.tsx:4:1
+TS6133: 'Button' is declared but its value is never read.
+    2 | import React, { useState } from 'react';
+    3 | import { Card, CardContent } from '@/components/ui/card';
+  > 4 | import { Button } from '@/components/ui/button';
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    5 | import { FileText, Upload, RefreshCw, X, Check } from 'lucide-react';
+    6 | import { Alert, AlertDescription } from '@/components/ui/alert';
+    7 |
+
+WARNING in src/components/institution/registration/DocumentManagement.tsx:6:1
+TS6192: All imports in import declaration are unused.
+    4 | import { Button } from '@/components/ui/button';
+    5 | import { FileText, Upload, RefreshCw, X, Check } from 'lucide-react';
+  > 6 | import { Alert, AlertDescription } from '@/components/ui/alert';
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    7 |
+    8 | interface Document {
+    9 |   id: string;
+
+WARNING in src/components/institution/registration/steps/DocumentsStep.tsx:94:19
+TS7006: Parameter 'prev' implicitly has an 'any' type.
+    92 |
+    93 |       // Update form data
+  > 94 |       setFormData(prev => ({
+       |                   ^^^^
+    95 |         ...prev,
+    96 |         documents: {
+    97 |           ...prev.documents,
+
+WARNING in src/components/institution/registration/steps/DocumentsStep.tsx:117:17
+TS7006: Parameter 'prev' implicitly has an 'any' type.
+    115 |
+    116 |   const handleRemoveFile = (documentKey: string) => {
+  > 117 |     setFormData(prev => {
+        |                 ^^^^
+    118 |       const newDocuments = { ...prev.documents };
+    119 |       delete newDocuments[documentKey];
+    120 |       return { ...prev, documents: newDocuments };
+
+WARNING in src/components/institution/registration/steps/DocumentsStep.tsx:135:6
+TS2559: Type '{ children: Element; }' has no properties in common with type 'IntrinsicAttributes & RefAttributes<any>'.
+    133 |
+    134 |   return (
+  > 135 |     <Card>
+        |      ^^^^
+    136 |       <CardContent className="space-y-6 pt-6">
+    137 |         <div>
+    138 |           <h3 className="text-lg font-medium text-gray-900 mb-2">Required Documents</h3>
+
+WARNING in src/components/institution/registration/steps/DocumentsStep.tsx:136:8
+TS2322: Type '{ children: Element[]; className: string; }' is not assignable to type 'IntrinsicAttributes & RefAttributes<any>'.
+  Property 'children' does not exist on type 'IntrinsicAttributes & RefAttributes<any>'.
+    134 |   return (
+    135 |     <Card>
+  > 136 |       <CardContent className="space-y-6 pt-6">
+        |        ^^^^^^^^^^^
+    137 |         <div>
+    138 |           <h3 className="text-lg font-medium text-gray-900 mb-2">Required Documents</h3>
+    139 |           <p className="text-sm text-gray-500">
+
+WARNING in src/components/institution/registration/steps/DocumentsStep.tsx:181:59
+TS2532: Object is possibly 'undefined'.
+    179 |                     <FileText className="w-5 h-5 text-blue-500" />
+    180 |                     <div>
+  > 181 |                       <p className="text-sm font-medium">{formData.documents[doc.key].name}</p>
+        |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    182 |                       <p className="text-xs text-gray-500">
+    183 |                         {(formData.documents[doc.key].size / 1024 / 1024).toFixed(2)} MB
+    184 |                       </p>
+
+WARNING in src/components/institution/registration/steps/DocumentsStep.tsx:183:27
+TS2532: Object is possibly 'undefined'.
+    181 |                       <p className="text-sm font-medium">{formData.documents[doc.key].name}</p>
+    182 |                       <p className="text-xs text-gray-500">
+  > 183 |                         {(formData.documents[doc.key].size / 1024 / 1024).toFixed(2)} MB
+        |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    184 |                       </p>
+    185 |                     </div>
+    186 |                   </div>
+
+WARNING in src/components/institution/registration/steps/DocumentsStep.tsx:197:57
+TS2532: Object is possibly 'undefined'.
+    195 |
+    196 |               {/* Upload Progress */}
+  > 197 |               {uploadProgress[doc.key] !== undefined && uploadProgress[doc.key] < 100 && (
+        |                                                         ^^^^^^^^^^^^^^^^^^^^^^^
+    198 |                 <div className="mt-2">
+    199 |                   <div className="w-full bg-gray-200 rounded-full h-1.5">
+    200 |                     <div
+
+WARNING in src/components/navigation/RoleBasedNavigation.tsx:89:28
+TS2322: Type '{ className: string; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'className' does not exist on type 'IntrinsicAttributes'.
+    87 |         >
+    88 |           <div className="flex items-center">
+  > 89 |             {Icon && <Icon className="w-5 h-5 mr-3" />}
+       |                            ^^^^^^^^^
+    90 |             <span>{item.label}</span>
+    91 |           </div>
+    92 |         </button>
+
+WARNING in src/components/workflow/ApprovalWorkflow.tsx:6:3
+TS6133: 'AlertTriangle' is declared but its value is never read.
+    4 |   CheckCircle,
+    5 |   Clock,
+  > 6 |   AlertTriangle,
+      |   ^^^^^^^^^^^^^
+    7 |   FileText,
+    8 |   User,
+    9 |   Calendar,
+
+WARNING in src/components/workflow/ApprovalWorkflow.tsx:7:3
+TS6133: 'FileText' is declared but its value is never read.
+     5 |   Clock,
+     6 |   AlertTriangle,
+  >  7 |   FileText,
+       |   ^^^^^^^^
+     8 |   User,
+     9 |   Calendar,
+    10 |   ThumbsUp,
+
+WARNING in src/components/workflow/ApprovalWorkflow.tsx:10:3
+TS6133: 'ThumbsUp' is declared but its value is never read.
+     8 |   User,
+     9 |   Calendar,
+  > 10 |   ThumbsUp,
+       |   ^^^^^^^^
+    11 |   RefreshCw
+    12 | } from 'lucide-react';
+    13 |
+
+WARNING in src/components/workflow/ApprovalWorkflow.tsx:33:60
+TS6133: 'applicationId' is declared but its value is never read.
+    31 | }
+    32 |
+  > 33 | const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({ applicationId }) => {
+       |                                                            ^^^^^^^^^^^^^^^^^
+    34 |   const [workflowSteps, setWorkflowSteps] = useState<WorkflowStep[]>([
+    35 |     {
+    36 |       id: 1,
+
+WARNING in src/components/workflow/ApprovalWorkflow.tsx:34:25
+TS6133: 'setWorkflowSteps' is declared but its value is never read.
+    32 |
+    33 | const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({ applicationId }) => {
+  > 34 |   const [workflowSteps, setWorkflowSteps] = useState<WorkflowStep[]>([
+       |                         ^^^^^^^^^^^^^^^^
+    35 |     {
+    36 |       id: 1,
+    37 |       title: 'Initial Document Verification',
+
+WARNING in src/pages/UnauthorizedPage.tsx:8:9
+TS6133: 'location' is declared but its value is never read.
+     6 | const UnauthorizedPage: React.FC = () => {
+     7 |   const navigate = useNavigate();
+  >  8 |   const location = useLocation();
+       |         ^^^^^^^^
+     9 |
+    10 |   return (
+    11 |     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+
+WARNING in src/store/slices/authSlice.js:34:1
+TS2528: A module cannot have multiple default exports.
+    32 |
+    33 | export const { setCredentials, logout } = authSlice.actions;
+  > 34 | export default authSlice.reducer;
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    35 |
+    36 | // src/components/auth/Login.js
+    37 | import React, { useState } from 'react';
+
+WARNING in src/store/slices/authSlice.js:130:16
+TS2528: A module cannot have multiple default exports.
+    128 | };
+    129 |
+  > 130 | export default Login;
+        |                ^^^^^
