@@ -1,77 +1,70 @@
-//src/contexts/AuthContext.tsx
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { User, UserRole } from '../types/core';
+import { createContext, useContext, useEffect, useState } from "react";
+import { Session, User } from "@supabase/supabase-js";
+import { supabase } from "../lib/supabase";
 
-interface AuthContextType {
+type AuthContextType = {
+  session: Session | null;
   user: User | null;
-  role: UserRole | null;
-  isAuthenticated: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>;
-  logout: () => void;
-  updateUser: (data: Partial<User>) => void;
-}
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  loading: boolean;
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const login = useCallback(async (credentials: LoginCredentials) => {
-    try {
-      // Replace with your actual API call
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials)
-      });
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
-      const userData = await response.json();
-      setUser(userData);
-      localStorage.setItem('auth_token', userData.token);
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
+    return () => subscription.unsubscribe();
   }, []);
 
-  const logout = useCallback(() => {
-    setUser(null);
-    localStorage.removeItem('auth_token');
-  }, []);
-
-  const updateUser = useCallback((data: Partial<User>) => {
-    setUser(prev => prev ? { ...prev, ...data } : null);
-  }, []);
-
-  const value = {
-    user,
-    role: user?.role || null,
-    isAuthenticated: !!user,
-    login,
-    logout,
-    updateUser
+  const signIn = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw error;
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+  };
+
+  const value = {
+    session,
+    user,
+    signIn,
+    signOut,
+    loading,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
