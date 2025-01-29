@@ -3,11 +3,13 @@ import react from "@vitejs/plugin-react-swc";
 import { tempo } from "tempo-devtools/dist/vite";
 import path from "path";
 
+// Add this block of code
 const conditionalPlugins = [];
 if (process.env.TEMPO) {
   conditionalPlugins.push(["tempo-devtools/swc", {}]);
 }
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react({
@@ -19,23 +21,8 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-    extensions: [".mjs", ".js", ".mts", ".ts", ".jsx", ".tsx", ".json"],
   },
-  optimizeDeps: {
-    include: ["react", "react-dom", "react-router-dom"],
-    esbuildOptions: {
-      loader: {
-        ".js": "jsx",
-        ".ts": "tsx",
-      },
-    },
-  },
-  server: {
-    host: "0.0.0.0",
-    port: 3000,
-    strictPort: true,
-    watch: {
-      usePolling: true,
-    },
+  define: {
+    "process.env": {},
   },
 });
