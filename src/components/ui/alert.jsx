@@ -1,49 +1,22 @@
-// src/components/ui/alert.jsx
-import * as React from "react"
-import { cva } from "class-variance-authority"
-import { cn } from "../../lib/utils"
+import React from "react";
 
-const alertVariants = cva(
-  "relative w-full rounded-lg border p-4",
-  {
-    variants: {
-      variant: {
-        default: "bg-background text-foreground",
-        destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive"
-      }
-    },
-    defaultVariants: {
-      variant: "default"
-    }
-  }
-)
+export const Alert = ({ children, variant = "default" }) => {
+  const variants = {
+    default: "bg-gray-100 text-gray-800",
+    destructive: "bg-red-100 text-red-800",
+    success: "bg-green-100 text-green-800",
+    warning: "bg-yellow-100 text-yellow-800",
+  };
 
-const Alert = React.forwardRef(({ className, variant, ...props }, ref) => (
-  <div
-    ref={ref}
-    role="alert"
-    className={cn(alertVariants({ variant }), className)}
-    {...props}
-  />
-))
-Alert.displayName = "Alert"
+  return (
+    <div className={`p-4 rounded-lg ${variants[variant]}`}>{children}</div>
+  );
+};
 
-const AlertTitle = React.forwardRef(({ className, ...props }, ref) => (
-  <h5
-    ref={ref}
-    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
-    {...props}
-  />
-))
-AlertTitle.displayName = "AlertTitle"
+export const AlertTitle = ({ children }) => (
+  <h5 className="font-medium mb-1">{children}</h5>
+);
 
-const AlertDescription = React.forwardRef(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("text-sm [&_p]:leading-relaxed", className)}
-    {...props}
-  />
-))
-AlertDescription.displayName = "AlertDescription"
-
-export { Alert, AlertTitle, AlertDescription }
+export const AlertDescription = ({ children }) => (
+  <div className="text-sm">{children}</div>
+);
