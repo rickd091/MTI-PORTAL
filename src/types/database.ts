@@ -1,171 +1,101 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export interface Institution {
+  id: string;
+  name: string;
+  registration_number: string;
+  status: "pending" | "active" | "suspended" | "expired";
+  type: string;
+  contact_person: string;
+  email: string;
+  phone: string;
+  address: string;
+  website?: string;
+  created_at: string;
+  updated_at: string;
+  accreditation_expiry?: string;
+  last_inspection_date?: string;
+}
 
-export interface Database {
-  public: {
-    Tables: {
-      users: {
-        Row: {
-          id: string;
-          email: string;
-          role: "admin" | "reviewer" | "institution";
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          email: string;
-          role: "admin" | "reviewer" | "institution";
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          email?: string;
-          role?: "admin" | "reviewer" | "institution";
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
-      institutions: {
-        Row: {
-          id: string;
-          name: string;
-          type: string;
-          registration_number: string | null;
-          contact_email: string | null;
-          contact_phone: string | null;
-          address: Json | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          type: string;
-          registration_number?: string | null;
-          contact_email?: string | null;
-          contact_phone?: string | null;
-          address?: Json | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          name?: string;
-          type?: string;
-          registration_number?: string | null;
-          contact_email?: string | null;
-          contact_phone?: string | null;
-          address?: Json | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
-      applications: {
-        Row: {
-          id: string;
-          institution_id: string;
-          status: string;
-          type: string;
-          submitted_by: string;
-          submitted_at: string;
-          updated_at: string;
-          data: Json | null;
-        };
-        Insert: {
-          id?: string;
-          institution_id: string;
-          status?: string;
-          type: string;
-          submitted_by: string;
-          submitted_at?: string;
-          updated_at?: string;
-          data?: Json | null;
-        };
-        Update: {
-          id?: string;
-          institution_id?: string;
-          status?: string;
-          type?: string;
-          submitted_by?: string;
-          submitted_at?: string;
-          updated_at?: string;
-          data?: Json | null;
-        };
-      };
-      documents: {
-        Row: {
-          id: string;
-          application_id: string;
-          name: string;
-          type: string;
-          status: string;
-          url: string;
-          uploaded_by: string;
-          uploaded_at: string;
-          expires_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          application_id: string;
-          name: string;
-          type: string;
-          status?: string;
-          url: string;
-          uploaded_by: string;
-          uploaded_at?: string;
-          expires_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          application_id?: string;
-          name?: string;
-          type?: string;
-          status?: string;
-          url?: string;
-          uploaded_by?: string;
-          uploaded_at?: string;
-          expires_at?: string | null;
-        };
-      };
-      inspections: {
-        Row: {
-          id: string;
-          application_id: string;
-          inspector_id: string;
-          scheduled_date: string | null;
-          status: string;
-          findings: Json | null;
-          created_at: string;
-          completed_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          application_id: string;
-          inspector_id: string;
-          scheduled_date?: string | null;
-          status?: string;
-          findings?: Json | null;
-          created_at?: string;
-          completed_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          application_id?: string;
-          inspector_id?: string;
-          scheduled_date?: string | null;
-          status?: string;
-          findings?: Json | null;
-          created_at?: string;
-          completed_at?: string | null;
-        };
-      };
-    };
-  };
+export interface Facility {
+  id: string;
+  institution_id: string;
+  facility_type: string;
+  name: string;
+  capacity?: number;
+  area_size?: number;
+  equipment_details?: Record<string, any>;
+  status: "operational" | "maintenance" | "inactive";
+  last_inspection_date?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Staff {
+  id: string;
+  institution_id: string;
+  first_name: string;
+  last_name: string;
+  role: string;
+  qualification: string;
+  certification_details?: Record<string, any>;
+  email?: string;
+  phone?: string;
+  status: "active" | "inactive" | "pending";
+  joining_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Program {
+  id: string;
+  institution_id: string;
+  name: string;
+  code: string;
+  type: string;
+  duration: string;
+  capacity: number;
+  description?: string;
+  requirements?: string[];
+  status: "draft" | "active" | "suspended" | "archived";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Document {
+  id: string;
+  institution_id: string;
+  document_type: string;
+  name: string;
+  file_path: string;
+  file_type: string;
+  file_size: number;
+  status: "pending" | "verified" | "rejected" | "expired";
+  expiry_date?: string;
+  uploaded_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Inspection {
+  id: string;
+  institution_id: string;
+  inspector_id: string;
+  inspection_date: string;
+  type: string;
+  findings?: Record<string, any>;
+  recommendations?: string;
+  status: "scheduled" | "in_progress" | "completed" | "cancelled";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ComplianceRecord {
+  id: string;
+  institution_id: string;
+  type: string;
+  status: "compliant" | "non_compliant" | "pending";
+  details?: Record<string, any>;
+  due_date?: string;
+  completed_at?: string;
+  created_at: string;
+  updated_at: string;
 }
