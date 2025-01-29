@@ -12,6 +12,7 @@ export const inspectionSchema = z.object({
   managerName: z.string().min(1, "Manager name is required"),
   principalName: z.string().min(1, "Principal name is required"),
 
+  // Documentation
   healthInspection: z.string().min(1, "Health inspection details are required"),
   leaseAgreement: z.string().min(1, "Lease agreement details are required"),
   financialRecords: z.string().min(1, "Financial records are required"),
@@ -21,6 +22,7 @@ export const inspectionSchema = z.object({
     .min(1, "Quality assurance details are required"),
   strategicPlan: z.string().min(1, "Strategic plan is required"),
 
+  // Facilities
   physicalFacilities: z
     .string()
     .min(1, "Physical facilities details are required"),
@@ -32,6 +34,7 @@ export const inspectionSchema = z.object({
     .string()
     .min(1, "Water and electricity details are required"),
 
+  // Staffing
   teachingStaff: z.string().min(1, "Teaching staff details are required"),
   technicalStaff: z.string().min(1, "Technical staff details are required"),
   administrativeStaff: z
@@ -41,6 +44,7 @@ export const inspectionSchema = z.object({
     .string()
     .min(1, "Guidance and counseling details are required"),
 
+  // Safety & Training
   safetyMeasures: z.string().min(1, "Safety measures details are required"),
   industrialAttachment: z
     .string()
@@ -52,6 +56,7 @@ export const inspectionSchema = z.object({
     .min(1, "Trainer preparation details are required"),
   examinationResults: z.string().min(1, "Examination results are required"),
 
+  // Assessment
   assessorName: z.string().min(1, "Assessor name is required"),
   assessorSignature: z.string().min(1, "Assessor signature is required"),
   date: z.string().min(1, "Date is required"),

@@ -3,11 +3,91 @@ import { inspectionApi } from "@/services/api/inspectionApi";
 import { useNavigate } from "react-router-dom";
 
 export interface InspectionFormData {
-  // ... (previous interface remains the same)
+  institutionName: string;
+  address: string;
+  phone: string;
+  email: string;
+  website: string;
+  location: string;
+  category: string;
+  ownership: string;
+  managerName: string;
+  principalName: string;
+
+  healthInspection: string;
+  leaseAgreement: string;
+  financialRecords: string;
+  legalDocuments: string;
+  internalQualityAssurance: string;
+  strategicPlan: string;
+
+  physicalFacilities: string;
+  theoryRooms: string;
+  laboratories: string;
+  library: string;
+  sanitation: string;
+  waterElectricity: string;
+
+  teachingStaff: string;
+  technicalStaff: string;
+  administrativeStaff: string;
+  guidanceCounselingUnit: string;
+
+  safetyMeasures: string;
+  industrialAttachment: string;
+  coursesApproved: string;
+  licensedCourses: string;
+  trainerPreparation: string;
+  examinationResults: string;
+
+  assessorName: string;
+  assessorSignature: string;
+  date: string;
+  recommendations: string;
 }
 
 const initialFormData: InspectionFormData = {
-  // ... (previous initial data remains the same)
+  institutionName: "",
+  address: "",
+  phone: "",
+  email: "",
+  website: "",
+  location: "",
+  category: "",
+  ownership: "",
+  managerName: "",
+  principalName: "",
+
+  healthInspection: "",
+  leaseAgreement: "",
+  financialRecords: "",
+  legalDocuments: "",
+  internalQualityAssurance: "",
+  strategicPlan: "",
+
+  physicalFacilities: "",
+  theoryRooms: "",
+  laboratories: "",
+  library: "",
+  sanitation: "",
+  waterElectricity: "",
+
+  teachingStaff: "",
+  technicalStaff: "",
+  administrativeStaff: "",
+  guidanceCounselingUnit: "",
+
+  safetyMeasures: "",
+  industrialAttachment: "",
+  coursesApproved: "",
+  licensedCourses: "",
+  trainerPreparation: "",
+  examinationResults: "",
+
+  assessorName: "",
+  assessorSignature: "",
+  date: "",
+  recommendations: "",
 };
 
 export const useInspectionForm = (inspectionId?: string) => {
@@ -44,26 +124,10 @@ export const useInspectionForm = (inspectionId?: string) => {
     }
   };
 
-  const handleFileUpload = async (file: File, type: string) => {
-    if (!inspectionId) {
-      setError("Please save the inspection first before uploading documents");
-      return;
-    }
-
-    try {
-      await inspectionApi.uploadDocument(inspectionId, file, type);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to upload document",
-      );
-    }
-  };
-
   return {
     formData,
     handleChange,
     handleSubmit,
-    handleFileUpload,
     isSubmitting,
     error,
   };
