@@ -4,6 +4,10 @@ import { MTIErrorProvider } from '@/components/error/MTIErrorProvider';
 import LoadingState from '@/components/common/LoadingState';
 import AppLayout from '@/components/layout/AppLayout';
 import { useAuth } from '@/contexts/AuthContext';
+import SupabaseTest from './SupabaseTest';
+import UserList from './components/UserList';
+import TodoList from './components/TodoList';
+import ApplicationsList from './components/ApplicationsList';
 
 // Lazy load components
 const LoginPage = React.lazy(() => import('@/pages/LoginPage'));
@@ -12,6 +16,9 @@ const ApplicationsPage = React.lazy(() => import('@/pages/ApplicationsPage.jsx')
 const InstitutionsPage = React.lazy(() => import('@/pages/InstitutionsPage'));
 const InspectionsPage = React.lazy(() => import('@/pages/InspectionsPage.jsx'));
 const SettingsPage = React.lazy(() => import('@/pages/SettingsPage.jsx'));
+const SimpleTest = React.lazy(() => import('@/SimpleTest'));
+const ServerPage = React.lazy(() => import('@/pages/ServerPage'));
+const DiagnosticPage = React.lazy(() => import('@/pages/DiagnosticPage'));
 
 export default function App() {
   const { loading } = useAuth();
@@ -41,6 +48,53 @@ export default function App() {
           element={
             <Suspense fallback={<LoadingState />}>
               <LoginPage />
+            </Suspense>
+          }
+        />
+        
+        <Route
+          path="/test"
+          element={
+            <Suspense fallback={<LoadingState />}>
+              <SimpleTest />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/supabase-test"
+          element={<SupabaseTest />}
+        />
+
+        <Route
+          path="/users"
+          element={<UserList />}
+        />
+
+        <Route
+          path="/todos"
+          element={<TodoList />}
+        />
+
+        <Route
+          path="/applications-list"
+          element={<ApplicationsList />}
+        />
+
+        <Route
+          path="/server-example"
+          element={
+            <Suspense fallback={<LoadingState />}>
+              <ServerPage />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/supabase-diagnostic"
+          element={
+            <Suspense fallback={<LoadingState />}>
+              <DiagnosticPage />
             </Suspense>
           }
         />

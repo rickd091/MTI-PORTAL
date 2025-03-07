@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SupabaseConnectionTest } from './components/SupabaseConnectionTest';
 
 const SimpleTest: React.FC = () => {
   return (
@@ -17,6 +18,11 @@ const SimpleTest: React.FC = () => {
       >
         Click Me
       </button>
+      
+      {/* Supabase Connection Test */}
+      <div style={{ marginTop: '30px' }}>
+        <SupabaseConnectionTest />
+      </div>
     </div>
   );
 };

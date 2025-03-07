@@ -1,14 +1,22 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./database.types";
 
-// Get environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Hardcoded Supabase credentials (for development only)
+const supabaseUrl = 'https://zrnngescxhrjdzpzujnt.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5nZXNjeGhyamR6cHp1am50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgwNDgxOTAsImV4cCI6MjA1MzYyNDE5MH0.6K1oQZXiFz0WSVau-vsbXN9_4ciTM2Bs1Zc6r4rFfQE';
 
-// Validate environment variables
-if (!supabaseUrl || !supabaseAnonKey) {
+// Fallback to environment variables if available
+const envSupabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const envSupabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Use environment variables if available, otherwise use hardcoded values
+const finalSupabaseUrl = envSupabaseUrl || supabaseUrl;
+const finalSupabaseAnonKey = envSupabaseAnonKey || supabaseAnonKey;
+
+// Validate Supabase credentials
+if (!finalSupabaseUrl || !finalSupabaseAnonKey) {
   console.error(
-    "⚠️ Missing Supabase environment variables. Please check your .env files."
+    "⚠️ Missing Supabase credentials. Please check your configuration."
   );
   
   // In development, provide helpful information
@@ -23,8 +31,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 // Create and export the typed Supabase client
 export const supabase = createClient<Database>(
-  supabaseUrl as string,
-  supabaseAnonKey as string,
+  finalSupabaseUrl,
+  finalSupabaseAnonKey,
   {
     auth: {
       persistSession: true,
@@ -37,7 +45,8 @@ export const supabase = createClient<Database>(
 // Helper function to check if Supabase connection is working
 export async function checkSupabaseConnection() {
   try {
-    const { data, error } = await supabase.from("profiles").select("count").limit(1);
+    console.log('Testing Supabase connection with URL:', finalSupabaseUrl);
+    const { error } = await supabase.from("applications").select("count", { count: 'exact', head: true });
     if (error) throw error;
     console.log("✅ Supabase connection successful");
     return true;

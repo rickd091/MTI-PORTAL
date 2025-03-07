@@ -4,9 +4,9 @@ import { eCitizenServices } from '../config/eCitizenServices';
 export class ECitizenPaymentService {
   // Initialize the service with API configurations
   constructor() {
-    this.baseUrl = process.env.REACT_APP_ECITIZEN_API_URL;
-    this.merchantId = process.env.REACT_APP_ECITIZEN_MERCHANT_ID;
-    this.apiKey = process.env.REACT_APP_ECITIZEN_API_KEY;
+    this.baseUrl = import.meta.env.VITE_ECITIZEN_API_URL;
+    this.merchantId = import.meta.env.VITE_ECITIZEN_MERCHANT_ID;
+    this.apiKey = import.meta.env.VITE_ECITIZEN_API_KEY;
   }
 
   // Get service details by code
