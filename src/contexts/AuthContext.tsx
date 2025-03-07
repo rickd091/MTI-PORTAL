@@ -7,7 +7,10 @@ type AuthContextType = {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
+  signInWithOAuth: (provider: 'github' | 'google') => Promise<void>;
   signOut: () => Promise<void>;
+  getSession: () => Promise<Session | null>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,7 +23,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Wrap in try/catch to handle potential errors with Supabase connection
     try {
-      authService.getSession().then((sessionData) => {
+      authService.getSession().then((sessionData: { session: Session | null }) => {
         setSession(sessionData.session);
         setUser(sessionData.session?.user ?? null);
         setLoading(false);
@@ -51,11 +54,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     signIn: async (email: string, password: string) => {
       try {
-        const authData = await authService.signIn(email, password);
+        const authData: { session: Session | null; user: User | null } = await authService.signIn(email, password);
         setSession(authData.session);
         setUser(authData.user);
       } catch (error) {
         console.error('Sign in error:', error);
+        throw error;
+      }
+    },
+    signUp: async (email: string, password: string) => {
+      try {
+        await authService.signUp(email, password);
+        // Note: We don't set session/user here because the user needs to verify their email
+      } catch (error) {
+        console.error('Sign up error:', error);
+        throw error;
+      }
+    },
+    signInWithOAuth: async (provider: 'github' | 'google') => {
+      try {
+        await authService.signInWithOAuth(provider);
+        // No need to set session/user here as we'll be redirected
+      } catch (error) {
+        console.error(`OAuth sign in error (${provider}):`, error);
         throw error;
       }
     },
@@ -69,6 +90,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Still clear session and user on error
         setSession(null);
         setUser(null);
+      }
+    },
+    getSession: async () => {
+      try {
+        const { session } = await authService.getSession();
+        return session;
+      } catch (error) {
+        console.error('Get session error:', error);
+        return null;
       }
     },
   };

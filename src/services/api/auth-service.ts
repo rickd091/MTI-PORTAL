@@ -7,6 +7,23 @@ export class AuthService extends BaseApi {
     );
   }
 
+  async signUp(email: string, password: string) {
+    return this.handleResponse(
+      this.supabase.auth.signUp({ email, password }),
+    );
+  }
+
+  async signInWithOAuth(provider: 'github' | 'google') {
+    return this.handleResponse(
+      this.supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      }),
+    );
+  }
+
   async signOut() {
     return this.handleResponse(this.supabase.auth.signOut());
   }
@@ -17,6 +34,10 @@ export class AuthService extends BaseApi {
 
   async getSession() {
     return this.handleResponse(this.supabase.auth.getSession());
+  }
+  
+  getSupabase() {
+    return this.supabase;
   }
 }
 

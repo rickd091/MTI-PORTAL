@@ -8,6 +8,7 @@ import SupabaseTest from './SupabaseTest';
 import UserList from './components/UserList';
 import TodoList from './components/TodoList';
 import ApplicationsList from './components/ApplicationsList';
+import AuthNav from './components/auth/AuthNav';
 
 // Lazy load components
 const LoginPage = React.lazy(() => import('@/pages/LoginPage'));
@@ -19,6 +20,8 @@ const SettingsPage = React.lazy(() => import('@/pages/SettingsPage.jsx'));
 const SimpleTest = React.lazy(() => import('@/SimpleTest'));
 const ServerPage = React.lazy(() => import('@/pages/ServerPage'));
 const DiagnosticPage = React.lazy(() => import('@/pages/DiagnosticPage'));
+const AuthDemoPage = React.lazy(() => import('@/pages/AuthDemoPage'));
+const AuthCallbackPage = React.lazy(() => import('@/pages/AuthCallbackPage'));
 
 export default function App() {
   const { loading } = useAuth();
@@ -53,6 +56,27 @@ export default function App() {
         />
         
         <Route
+          path="/auth/demo"
+          element={
+            <Suspense fallback={<LoadingState />}>
+              <>
+                <AuthNav />
+                <AuthDemoPage />
+              </>
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/auth/callback"
+          element={
+            <Suspense fallback={<LoadingState />}>
+              <AuthCallbackPage />
+            </Suspense>
+          }
+        />
+        
+        <Route
           path="/test"
           element={
             <Suspense fallback={<LoadingState />}>
@@ -63,29 +87,52 @@ export default function App() {
 
         <Route
           path="/supabase-test"
-          element={<SupabaseTest />}
+          element={
+            <>
+              <AuthNav />
+              <SupabaseTest />
+            </>
+          }
         />
 
         <Route
           path="/users"
-          element={<UserList />}
+          element={
+            <>
+              <AuthNav />
+              <UserList />
+            </>
+          }
         />
 
         <Route
           path="/todos"
-          element={<TodoList />}
+          element={
+            <>
+              <AuthNav />
+              <TodoList />
+            </>
+          }
         />
 
         <Route
           path="/applications-list"
-          element={<ApplicationsList />}
+          element={
+            <>
+              <AuthNav />
+              <ApplicationsList />
+            </>
+          }
         />
 
         <Route
           path="/server-example"
           element={
             <Suspense fallback={<LoadingState />}>
-              <ServerPage />
+              <>
+                <AuthNav />
+                <ServerPage />
+              </>
             </Suspense>
           }
         />
@@ -94,7 +141,10 @@ export default function App() {
           path="/supabase-diagnostic"
           element={
             <Suspense fallback={<LoadingState />}>
-              <DiagnosticPage />
+              <>
+                <AuthNav />
+                <DiagnosticPage />
+              </>
             </Suspense>
           }
         />
