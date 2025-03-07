@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../utils/supabase/client';
+import { supabase } from '../utils/supabase';
+import { ErrorBoundary } from 'react-error-boundary';
 
 interface User {
   id: string;
@@ -8,7 +9,7 @@ interface User {
   created_at?: string;
 }
 
-const UserList: React.FC = () => {
+const UserListContent: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,6 +18,8 @@ const UserList: React.FC = () => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
+        setError(null);
+        
         // Query the users table from Supabase
         const { data, error } = await supabase.from('users').select('*');
         
@@ -52,12 +55,24 @@ const UserList: React.FC = () => {
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
           <p className="font-bold">Error</p>
           <p>{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-2 px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+          >
+            Retry
+          </button>
         </div>
       )}
       
       {!loading && !error && users.length === 0 && (
         <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4" role="alert">
           <p>No users found. You may need to create the 'users' table in your Supabase database.</p>
+          <a 
+            href="/supabase-diagnostic"
+            className="mt-2 inline-block px-3 py-1 bg-yellow-600 text-white rounded text-sm hover:bg-yellow-700"
+          >
+            Go to Diagnostics
+          </a>
         </div>
       )}
       
@@ -88,6 +103,37 @@ const UserList: React.FC = () => {
         </div>
       )}
     </div>
+  );
+};
+
+const UserList: React.FC = () => {
+  return (
+    <ErrorBoundary
+      FallbackComponent={({ error, resetErrorBoundary }) => (
+        <div className="p-6 max-w-4xl mx-auto">
+          <div className="bg-red-50 p-4 rounded border border-red-200">
+            <h3 className="text-red-700 font-semibold mb-2">Error loading users</h3>
+            <p className="text-sm text-red-600 mb-3">{error.message}</p>
+            <div className="flex space-x-3">
+              <button 
+                onClick={resetErrorBoundary}
+                className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+              >
+                Try Again
+              </button>
+              <a 
+                href="/supabase-diagnostic"
+                className="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700"
+              >
+                Go to Diagnostics
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    >
+      <UserListContent />
+    </ErrorBoundary>
   );
 };
 

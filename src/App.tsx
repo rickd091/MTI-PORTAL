@@ -1,5 +1,5 @@
-import React, { Suspense, useState, useEffect } from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import React, { Suspense, useState, useEffect, ComponentType, ReactElement } from 'react';
+import { Route, Routes, Navigate, Link } from 'react-router-dom';
 import { MTIErrorProvider } from '@/components/error/MTIErrorProvider';
 import LoadingState from '@/components/common/LoadingState';
 import AppLayout from '@/components/layout/AppLayout';
@@ -9,19 +9,65 @@ import UserList from './components/UserList';
 import TodoList from './components/TodoList';
 import ApplicationsList from './components/ApplicationsList';
 import AuthNav from './components/auth/AuthNav';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 
 // Lazy load components
 const LoginPage = React.lazy(() => import('@/pages/LoginPage'));
-const DashboardPage = React.lazy(() => import('@/pages/DashboardPage.jsx'));
-const ApplicationsPage = React.lazy(() => import('@/pages/ApplicationsPage.jsx'));
+const DashboardPage = React.lazy(() => import('@/pages/DashboardPage'));
+const ApplicationsPage = React.lazy(() => import('@/pages/ApplicationsPage'));
 const InstitutionsPage = React.lazy(() => import('@/pages/InstitutionsPage'));
-const InspectionsPage = React.lazy(() => import('@/pages/InspectionsPage.jsx'));
-const SettingsPage = React.lazy(() => import('@/pages/SettingsPage.jsx'));
+const InspectionsPage = React.lazy(() => import('@/pages/InspectionsPage'));
+const SettingsPage = React.lazy(() => import('@/pages/SettingsPage'));
 const SimpleTest = React.lazy(() => import('@/SimpleTest'));
 const ServerPage = React.lazy(() => import('@/pages/ServerPage'));
 const DiagnosticPage = React.lazy(() => import('@/pages/DiagnosticPage'));
 const AuthDemoPage = React.lazy(() => import('@/pages/AuthDemoPage'));
 const AuthCallbackPage = React.lazy(() => import('@/pages/AuthCallbackPage'));
+const DebugPage = React.lazy(() => import('@/DebugPage'));
+const DirectTest = React.lazy(() => import('@/DirectTest'));
+
+// Error fallback component
+const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps): ReactElement => (
+  <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden mt-10">
+    <div className="text-center">
+      <h2 className="text-xl font-bold mb-4 text-red-600">Component Error</h2>
+      <p className="mb-4">There was an error loading this component:</p>
+      <pre className="bg-gray-100 p-3 rounded text-left text-sm overflow-auto mb-4">
+        {error.message}
+      </pre>
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={resetErrorBoundary}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Try Again
+        </button>
+        <Link
+          to="/supabase-diagnostic"
+          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+        >
+          Go to Diagnostics
+        </Link>
+      </div>
+    </div>
+  </div>
+);
+
+// Wrapper for lazy-loaded components with error boundary
+interface LazyComponentProps {
+  component: ComponentType;
+  fallback?: ReactElement;
+}
+
+const LazyComponentWithErrorBoundary = ({ component: Component, fallback = <LoadingState /> }: LazyComponentProps): ReactElement => {
+  return (
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Suspense fallback={fallback}>
+        <Component />
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
 
 export default function App() {
   const { loading } = useAuth();
@@ -49,39 +95,33 @@ export default function App() {
         <Route
           path="/login"
           element={
-            <Suspense fallback={<LoadingState />}>
-              <LoginPage />
-            </Suspense>
+            <LazyComponentWithErrorBoundary component={LoginPage} />
           }
         />
         
         <Route
           path="/auth/demo"
           element={
-            <Suspense fallback={<LoadingState />}>
+            <LazyComponentWithErrorBoundary component={() => (
               <>
                 <AuthNav />
                 <AuthDemoPage />
               </>
-            </Suspense>
+            )} />
           }
         />
 
         <Route
           path="/auth/callback"
           element={
-            <Suspense fallback={<LoadingState />}>
-              <AuthCallbackPage />
-            </Suspense>
+            <LazyComponentWithErrorBoundary component={AuthCallbackPage} />
           }
         />
         
         <Route
           path="/test"
           element={
-            <Suspense fallback={<LoadingState />}>
-              <SimpleTest />
-            </Suspense>
+            <LazyComponentWithErrorBoundary component={SimpleTest} />
           }
         />
 
@@ -128,24 +168,28 @@ export default function App() {
         <Route
           path="/server-example"
           element={
-            <Suspense fallback={<LoadingState />}>
-              <>
-                <AuthNav />
-                <ServerPage />
-              </>
-            </Suspense>
+            <LazyComponentWithErrorBoundary component={ServerPage} />
+          }
+        />
+
+        <Route
+          path="/direct-test"
+          element={
+            <LazyComponentWithErrorBoundary component={DirectTest} />
+          }
+        />
+
+        <Route
+          path="/debug"
+          element={
+            <LazyComponentWithErrorBoundary component={DebugPage} />
           }
         />
 
         <Route
           path="/supabase-diagnostic"
           element={
-            <Suspense fallback={<LoadingState />}>
-              <>
-                <AuthNav />
-                <DiagnosticPage />
-              </>
-            </Suspense>
+            <LazyComponentWithErrorBoundary component={DiagnosticPage} />
           }
         />
 
@@ -153,41 +197,31 @@ export default function App() {
           <Route
             index
             element={
-              <Suspense fallback={<LoadingState />}>
-                <DashboardPage />
-              </Suspense>
+              <LazyComponentWithErrorBoundary component={DashboardPage} />
             }
           />
           <Route
             path="applications/*"
             element={
-              <Suspense fallback={<LoadingState />}>
-                <ApplicationsPage />
-              </Suspense>
+              <LazyComponentWithErrorBoundary component={ApplicationsPage} />
             }
           />
           <Route
             path="institutions/*"
             element={
-              <Suspense fallback={<LoadingState />}>
-                <InstitutionsPage />
-              </Suspense>
+              <LazyComponentWithErrorBoundary component={InstitutionsPage} />
             }
           />
           <Route
             path="inspections/*"
             element={
-              <Suspense fallback={<LoadingState />}>
-                <InspectionsPage />
-              </Suspense>
+              <LazyComponentWithErrorBoundary component={InspectionsPage} />
             }
           />
           <Route
             path="settings/*"
             element={
-              <Suspense fallback={<LoadingState />}>
-                <SettingsPage />
-              </Suspense>
+              <LazyComponentWithErrorBoundary component={SettingsPage} />
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -23,7 +23,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Wrap in try/catch to handle potential errors with Supabase connection
     try {
-      authService.getSession().then((sessionData: { session: Session | null }) => {
+      authService.getSession().then((result) => {
+        const sessionData = result as { session: Session | null };
         setSession(sessionData.session);
         setUser(sessionData.session?.user ?? null);
         setLoading(false);
@@ -54,7 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     signIn: async (email: string, password: string) => {
       try {
-        const authData: { session: Session | null; user: User | null } = await authService.signIn(email, password);
+        const result = await authService.signIn(email, password);
+        const authData = result as { session: Session | null; user: User | null };
         setSession(authData.session);
         setUser(authData.user);
       } catch (error) {
@@ -94,8 +96,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     },
     getSession: async () => {
       try {
-        const { session } = await authService.getSession();
-        return session;
+        const result = await authService.getSession();
+        const sessionData = result as { session: Session | null };
+        return sessionData.session;
       } catch (error) {
         console.error('Get session error:', error);
         return null;

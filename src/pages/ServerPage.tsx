@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../utils/supabase/client';
+import { supabase } from '../utils/supabase';
+import { ErrorBoundary } from 'react-error-boundary';
 
 interface Todo {
   id: string;
@@ -18,7 +19,22 @@ const ServerPage: React.FC = () => {
       
       <div className="bg-white shadow-md rounded p-6">
         <h2 className="text-xl font-semibold mb-4">Todo List</h2>
-        <TodoList />
+        <ErrorBoundary
+          FallbackComponent={({ error, resetErrorBoundary }) => (
+            <div className="bg-red-50 p-4 rounded border border-red-200">
+              <h3 className="text-red-700 font-semibold mb-2">Error loading todos</h3>
+              <p className="text-sm text-red-600 mb-3">{error.message}</p>
+              <button 
+                onClick={resetErrorBoundary}
+                className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+              >
+                Try Again
+              </button>
+            </div>
+          )}
+        >
+          <TodoList />
+        </ErrorBoundary>
       </div>
     </div>
   );
@@ -33,6 +49,8 @@ const TodoList: React.FC = () => {
     const fetchTodos = async () => {
       try {
         setLoading(true);
+        setError(null);
+        
         // Simulate a delay to show loading state
         await new Promise(resolve => setTimeout(resolve, 1000));
         
@@ -65,6 +83,12 @@ const TodoList: React.FC = () => {
       <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
         <p className="font-bold">Error</p>
         <p>{error}</p>
+        <button 
+          onClick={() => window.location.reload()}
+          className="mt-2 px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+        >
+          Retry
+        </button>
       </div>
     );
   }
