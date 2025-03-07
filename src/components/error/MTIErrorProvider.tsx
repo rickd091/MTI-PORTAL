@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 interface ErrorContextType {
   setError: (error: string | null) => void;

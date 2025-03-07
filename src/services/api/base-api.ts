@@ -1,8 +1,13 @@
 import { supabase } from "@/lib/supabase-client";
-import { Database } from "@/lib/database.types";
+import { PostgrestBuilder, PostgrestFilterBuilder } from "@supabase/supabase-js";
 
 export class BaseApi {
   protected supabase = supabase;
+
+  // Add a method to expose the supabase client
+  getSupabase() {
+    return this.supabase;
+  }
 
   protected handleError(error: any): never {
     console.error("API Error:", error);
@@ -10,11 +15,11 @@ export class BaseApi {
   }
 
   protected async handleResponse<T>(
-    promise: Promise<{ data: T | null; error: any }>,
+    query: PostgrestBuilder<T> | PostgrestFilterBuilder<any, any, any, any, any>,
   ): Promise<T> {
-    const { data, error } = await promise;
+    const { data, error } = await query;
     if (error) throw this.handleError(error);
     if (!data) throw new Error("No data returned");
-    return data;
+    return data as T;
   }
 }

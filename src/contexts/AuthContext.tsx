@@ -18,21 +18,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    authService.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    // Wrap in try/catch to handle potential errors with Supabase connection
+    try {
+      authService.getSession().then((sessionData) => {
+        setSession(sessionData.session);
+        setUser(sessionData.session?.user ?? null);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.warn('Error getting session:', error);
+        setLoading(false);
+      });
 
-    const {
-      data: { subscription },
-    } = authService.supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+      // Use the exported authService.supabase instance
+      const { data: { subscription } } = authService.getSupabase().auth.onAuthStateChange((_event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+      });
 
-    return () => subscription.unsubscribe();
+      return () => subscription.unsubscribe();
+    } catch (error) {
+      console.warn('Error setting up auth listener:', error);
+      setLoading(false);
+      return () => {}; // Return empty cleanup function
+    }
   }, []);
 
   const value = {
@@ -40,14 +50,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     loading,
     signIn: async (email: string, password: string) => {
-      const { data } = await authService.signIn(email, password);
-      setSession(data.session);
-      setUser(data.user);
+      try {
+        const authData = await authService.signIn(email, password);
+        setSession(authData.session);
+        setUser(authData.user);
+      } catch (error) {
+        console.error('Sign in error:', error);
+        throw error;
+      }
     },
     signOut: async () => {
-      await authService.signOut();
-      setSession(null);
-      setUser(null);
+      try {
+        await authService.signOut();
+        setSession(null);
+        setUser(null);
+      } catch (error) {
+        console.error('Sign out error:', error);
+        // Still clear session and user on error
+        setSession(null);
+        setUser(null);
+      }
     },
   };
 
