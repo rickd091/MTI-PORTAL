@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minimal Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f0f4f8; }
+    .container { max-width: 600px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    h1 { color: #2563eb; }
+    .status { padding: 10px; margin-top: 20px; border-radius: 4px; }
+    .success { background-color: #d1fae5; color: #065f46; }
+    .error { background-color: #fee2e2; color: #b91c1c; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MTI Portal Test Page</h1>
+    <p>This is a minimal static HTML page to test if the browser preview is functioning correctly.</p>
+    
+    <div class="status success">
+      <p><strong>Success:</strong> If you can see this page, the browser preview is working correctly for static HTML content.</p>
+    </div>
+    
+    <p>Next steps:</p>
+    <ul>
+      <li>Try accessing the main application at <a href="/" target="_blank">the homepage</a></li>
+      <li>Check your browser console for JavaScript errors</li>
+      <li>Verify your Supabase connection settings in the environment variables</li>
+    </ul>
+  </div>
+  
+  <script>
+    // Simple script to test JavaScript execution
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Minimal test page loaded successfully');
+      
+      // Add a status message to the page
+      const statusDiv = document.createElement('div');
+      statusDiv.className = 'status success';
+      statusDiv.innerHTML = '<p><strong>JavaScript:</strong> JavaScript is executing correctly on this page.</p>';
+      document.querySelector('.container').appendChild(statusDiv);
+    });
+  </script>
+</body>
+</html>

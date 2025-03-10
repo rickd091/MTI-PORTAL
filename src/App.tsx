@@ -25,6 +25,7 @@ const AuthDemoPage = React.lazy(() => import('@/pages/AuthDemoPage'));
 const AuthCallbackPage = React.lazy(() => import('@/pages/AuthCallbackPage'));
 const DebugPage = React.lazy(() => import('@/DebugPage'));
 const DirectTest = React.lazy(() => import('@/DirectTest'));
+const TestPage = React.lazy(() => import('@/TestPage'));
 
 // Error fallback component
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps): ReactElement => (
@@ -190,6 +191,13 @@ export default function App() {
           path="/supabase-diagnostic"
           element={
             <LazyComponentWithErrorBoundary component={DiagnosticPage} />
+          }
+        />
+
+        <Route
+          path="/test-page"
+          element={
+            <LazyComponentWithErrorBoundary component={TestPage} />
           }
         />
 

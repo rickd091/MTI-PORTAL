@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from './utils/supabase/client';
 
-const SupabaseTest: React.FC = () => {
+const SupabaseTest = () => {
   const [connectionStatus, setConnectionStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [supabaseUrl, setSupabaseUrl] = useState<string>('');
@@ -26,11 +26,11 @@ const SupabaseTest: React.FC = () => {
         }
 
         // Simple health check query - using a simpler approach that doesn't require specific tables
-        const { data, error } = await supabase.from('_tables').select('*').limit(1);
+        const { error: connectionError } = await supabase.from('_tables').select('*').limit(1);
         
-        if (error) {
-          console.error('Supabase connection error:', error);
-          setErrorMessage(error.message);
+        if (connectionError) {
+          console.error('Supabase connection error:', connectionError);
+          setErrorMessage(connectionError.message);
           setConnectionStatus('error');
           return;
         }

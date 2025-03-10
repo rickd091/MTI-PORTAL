@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from '@supabase/supabase-js';
 import type { Database } from "./database.types";
 
 // Debug flag for detailed logging
@@ -14,26 +14,18 @@ function logDebug(message: string, data?: any): void {
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://zrnngescxhrjdzpzujnt.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5nZXNjeGhyamR6cHp1am50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgwNDgxOTAsImV4cCI6MjA1MzYyNDE5MH0.6K1oQZXiFz0WSVau-vsbXN9_4ciTM2Bs1Zc6r4rFfQE';
 
-logDebug('Supabase configuration', {
-  url: supabaseUrl,
-  keyConfigured: !!supabaseAnonKey,
-  mode: import.meta.env.MODE,
+console.log('Supabase configuration:', {
+  SUPABASE_URL: supabaseUrl ? 'Configured' : 'Missing',
+  SUPABASE_ANON_KEY: supabaseAnonKey ? 'Configured' : 'Missing',
 });
 
 // Validate Supabase credentials
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error(
-    "⚠️ Missing Supabase credentials. Please check your configuration."
-  );
-  
-  // In development, provide helpful information
-  if (import.meta.env.DEV) {
-    console.info(
-      "ℹ️ For local development, make sure you have created a .env.local file with the following variables:\n" +
-      "VITE_SUPABASE_URL=your_supabase_url\n" +
-      "VITE_SUPABASE_ANON_KEY=your_supabase_anon_key"
-    );
-  }
+if (!supabaseUrl) {
+  console.error('CRITICAL ERROR: VITE_SUPABASE_URL environment variable is missing');
+}
+
+if (!supabaseAnonKey) {
+  console.error('CRITICAL ERROR: VITE_SUPABASE_ANON_KEY environment variable is missing');
 }
 
 // Create and export the typed Supabase client
@@ -101,3 +93,11 @@ export async function checkSupabaseConnection() {
     return false;
   }
 }
+
+// Test connection on initial load
+checkSupabaseConnection()
+  .then(result => {
+    if (!result) {
+      console.warn('Initial Supabase connection test failed. Application may have limited functionality.');
+    }
+  });

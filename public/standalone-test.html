@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Standalone Supabase Test</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2.38.4"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #f9fafb;
+    }
+    .container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2563eb;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 10px;
+    }
+    .status-box {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .success {
+      background-color: #d1fae5;
+      border: 1px solid #6ee7b7;
+    }
+    .error {
+      background-color: #fee2e2;
+      border: 1px solid #fca5a5;
+    }
+    .loading {
+      background-color: #f3f4f6;
+      border: 1px solid #d1d5db;
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #1d4ed8;
+    }
+    pre {
+      background-color: #f1f5f9;
+      padding: 10px;
+      border-radius: 4px;
+      overflow: auto;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Standalone Supabase Test</h1>
+    <p>This page tests Supabase connection directly without React or other frameworks.</p>
+    
+    <div id="status" class="status-box loading">
+      <h2>Status: Initializing...</h2>
+      <p>Preparing to test connection...</p>
+    </div>
+    
+    <div id="details" style="margin-top: 20px;">
+      <h3>Environment Information</h3>
+      <p><strong>Testing with:</strong> Hard-coded values (same as in DirectTest.tsx)</p>
+      <p><strong>Supabase URL:</strong> https://zrnngescxhrjdzpzujnt.supabase.co</p>
+      <p><strong>Browser:</strong> <span id="browser-info"></span></p>
+    </div>
+    
+    <button id="test-button">Run Test Again</button>
+    <button id="home-button">Go to Home</button>
+  </div>
+
+  <script>
+    // Display browser info
+    document.getElementById('browser-info').textContent = navigator.userAgent;
+    
+    // Status elements
+    const statusBox = document.getElementById('status');
+    
+    // Test function
+    async function testSupabaseConnection() {
+      statusBox.className = 'status-box loading';
+      statusBox.innerHTML = '<h2>Status: Testing Connection...</h2><p>Attempting to connect to Supabase...</p>';
+      
+      try {
+        // Using the same credentials from DirectTest.tsx
+        const supabaseUrl = 'https://zrnngescxhrjdzpzujnt.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5nZXNjeGhyamR6cHp1am50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgwNDgxOTAsImV4cCI6MjA1MzYyNDE5MH0.6K1oQZXiFz0WSVau-vsbXN9_4ciTM2Bs1Zc6r4rFfQE';
+        
+        // Create client
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+        
+        // Test query
+        console.log('Testing Supabase connection...');
+        const { data, error, count } = await supabase
+          .from('applications')
+          .select('*', { count: 'exact' })
+          .limit(5);
+          
+        if (error) throw error;
+        
+        // Success
+        statusBox.className = 'status-box success';
+        statusBox.innerHTML = `
+          <h2>Status: Connection Successful!</h2>
+          <p>Connected to Supabase and found ${count} records in the applications table.</p>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        `;
+      } catch (error) {
+        // Error
+        console.error('Connection error:', error);
+        statusBox.className = 'status-box error';
+        statusBox.innerHTML = `
+          <h2>Status: Connection Failed</h2>
+          <p>There was an error connecting to Supabase:</p>
+          <pre>${JSON.stringify(error, null, 2)}</pre>
+        `;
+      }
+    }
+    
+    // Event listeners
+    document.getElementById('test-button').addEventListener('click', testSupabaseConnection);
+    document.getElementById('home-button').addEventListener('click', () => {
+      window.location.href = '/';
+    });
+    
+    // Run test on page load
+    document.addEventListener('DOMContentLoaded', testSupabaseConnection);
+  </script>
+</body>
+</html>

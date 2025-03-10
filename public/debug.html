@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTI Portal Debug</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .container { max-width: 800px; margin: 0 auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
+    .success { color: green; }
+    .error { color: red; }
+    .info { color: blue; }
+    pre { background: #f5f5f5; padding: 10px; border-radius: 4px; overflow: auto; }
+    button { background: #0070f3; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MTI Portal Diagnostic Tool</h1>
+    <p>This page helps diagnose rendering issues with the MTI Portal application.</p>
+    
+    <h2>Environment Check</h2>
+    <div id="env-check">Loading...</div>
+    
+    <h2>Supabase Connection Test</h2>
+    <div id="supabase-test">Loading...</div>
+    
+    <h2>Navigation</h2>
+    <p>Try these direct links:</p>
+    <ul>
+      <li><a href="/" target="_blank">Home Page</a></li>
+      <li><a href="/direct-test" target="_blank">Direct Test</a></li>
+      <li><a href="/supabase-diagnostic" target="_blank">Supabase Diagnostic</a></li>
+      <li><a href="/test-page" target="_blank">Test Page</a></li>
+    </ul>
+    
+    <h2>Manual Fix</h2>
+    <p>If you continue to see blank pages, try the following:</p>
+    <button id="fix-button">Apply Quick Fix</button>
+    <div id="fix-result"></div>
+  </div>
+
+  <script>
+    // Check environment
+    function checkEnvironment() {
+      const envCheck = document.getElementById('env-check');
+      try {
+        envCheck.innerHTML = '<p class="info">Checking environment...</p>';
+        
+        const envInfo = {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          cookiesEnabled: navigator.cookieEnabled,
+          windowSize: `${window.innerWidth}x${window.innerHeight}`,
+          timestamp: new Date().toString()
+        };
+        
+        envCheck.innerHTML = `
+          <p class="success">Environment check complete</p>
+          <pre>${JSON.stringify(envInfo, null, 2)}</pre>
+        `;
+      } catch (error) {
+        envCheck.innerHTML = `<p class="error">Error checking environment: ${error.message}</p>`;
+      }
+    }
+    
+    // Test Supabase connection
+    function testSupabase() {
+      const supabaseTest = document.getElementById('supabase-test');
+      supabaseTest.innerHTML = '<p class="info">Checking Supabase connection (this requires loading the Supabase client)...</p>';
+      
+      // We can't use the Supabase client directly in a static HTML file
+      // This just shows how we would set it up
+      supabaseTest.innerHTML = `
+        <p class="info">Cannot test Supabase directly from static HTML.</p>
+        <p>Verify these environment variables in your React app:</p>
+        <pre>VITE_SUPABASE_URL: "https://zrnngescxhrjdzpzujnt.supabase.co"
+VITE_SUPABASE_ANON_KEY: [your-key]</pre>
+      `;
+    }
+    
+    // Quick fix function
+    function applyQuickFix() {
+      const fixResult = document.getElementById('fix-result');
+      fixResult.innerHTML = '<p class="info">Attempting to fix common issues...</p>';
+      
+      // Clear localStorage and sessionStorage
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+        fixResult.innerHTML += '<p class="success">✓ Cleared browser storage</p>';
+      } catch (e) {
+        fixResult.innerHTML += `<p class="error">✗ Failed to clear browser storage: ${e.message}</p>`;
+      }
+      
+      fixResult.innerHTML += '<p>Please try reloading the application now.</p>';
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      checkEnvironment();
+      testSupabase();
+      document.getElementById('fix-button').addEventListener('click', applyQuickFix);
+    });
+  </script>
+</body>
+</html>

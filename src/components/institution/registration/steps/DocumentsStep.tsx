@@ -3,6 +3,13 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import { type DocumentInputs } from '@/lib/validation/institutionSchema';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash2, Upload } from 'lucide-react';
+import { FieldError } from 'react-hook-form';
+
+// Define interfaces for better type safety
+interface DocumentError extends FieldError {
+  document_type?: string;
+  message?: string;
+}
 
 const REQUIRED_DOCUMENTS = [
   { type: 'REGISTRATION_CERT', label: 'Registration Certificate' },
@@ -12,7 +19,7 @@ const REQUIRED_DOCUMENTS = [
 ];
 
 export function DocumentsStep() {
-  const { register, control, formState: { errors } } = useFormContext<{ documents: DocumentInputs[] }>();
+  const { control, formState: { errors } } = useFormContext<{ documents: DocumentInputs[] }>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'documents'
@@ -26,6 +33,11 @@ export function DocumentsStep() {
     }
   };
 
+  // Type guard function to check if an object is a DocumentError
+  const isDocumentError = (obj: any): obj is DocumentError => {
+    return obj && typeof obj === 'object' && 'document_type' in obj;
+  };
+
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-medium">Required Documents</h3>
@@ -36,8 +48,14 @@ export function DocumentsStep() {
 
       <div className="space-y-4">
         {REQUIRED_DOCUMENTS.map((doc, index) => {
-          const uploadedDoc = fields.find(f => f.document_type === doc.type);
-          const error = errors.documents?.find(e => e?.document_type === doc.type);
+          // Find the uploaded document with proper type assertion
+          const uploadedDoc = fields.find(
+            (f) => f && typeof f === 'object' && 'document_type' in f && f.document_type === doc.type
+          ) as unknown as (DocumentInputs & { file: File }) | undefined;
+          
+          // Safely handle errors with proper type checking
+          const documentErrors = Array.isArray(errors.documents) ? errors.documents : [];
+          const error = documentErrors.find(err => isDocumentError(err) && err.document_type === doc.type);
 
           return (
             <div key={doc.type} className="border rounded-lg p-4">
@@ -49,7 +67,7 @@ export function DocumentsStep() {
                       {uploadedDoc.file.name} ({(uploadedDoc.file.size / 1024 / 1024).toFixed(2)}MB)
                     </p>
                   )}
-                  {error && (
+                  {error && error.message && (
                     <p className="text-sm text-red-600 mt-1">{error.message}</p>
                   )}
                 </div>
@@ -64,4 +82,33 @@ export function DocumentsStep() {
                   />
                   <label
                     htmlFor={`file-${doc.type}`}
-                    className="cursor-pointer inline-flex items-center space-x-2 px-4 py-2 border rounded-md hover:
+                    className="cursor-pointer inline-flex items-center space-x-2 px-4 py-2 border rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    <Upload className="h-4 w-4" />
+                    <span>{uploadedDoc ? 'Replace' : 'Upload'}</span>
+                  </label>
+                  
+                  {uploadedDoc && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => remove(fields.findIndex((f: { document_type: string }) => f.document_type === doc.type))}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      
+      <Button type="button" variant="outline" className="w-full mt-4">
+        <Plus className="h-4 w-4 mr-2" />
+        Add Additional Document
+      </Button>
+    </div>
+  );
+}

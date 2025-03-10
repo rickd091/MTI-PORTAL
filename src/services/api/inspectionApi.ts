@@ -119,6 +119,22 @@ export const inspectionApi = {
 
     const { data: document, error: insertError } = await supabase
       .from("inspection_documents")
+      .insert([
+        {
+          inspection_id: inspectionId,
+          document_type: type,
+          file_path: filePath,
+          file_name: file.name,
+          file_size: file.size,
+          mime_type: file.type,
+        },
+      ])
+      .select()
+      .single();
+
+    if (insertError) throw new Error(insertError.message);
+    return document;
+  },
 
   async list(params?: InspectionListParams): Promise<InspectionResponse[]> {
     let query = supabase.from("inspections").select("*");
@@ -207,21 +223,5 @@ export const inspectionApi = {
 
     if (error) throw new Error(error.message);
     return inspection;
-  }
-      .insert([
-        {
-          inspection_id: inspectionId,
-          document_type: type,
-          file_path: filePath,
-          file_name: file.name,
-          file_size: file.size,
-          mime_type: file.type,
-        },
-      ])
-      .select()
-      .single();
-
-    if (insertError) throw new Error(insertError.message);
-    return document;
   },
 };
